@@ -1,0 +1,24 @@
+.episode-info {
+  width: 100%;
+  background-color: #1115;
+  padding: 12px;
+}
+
+.episode-info__name {
+  color: #fff;
+  font-size: 36px;
+  line-height: 1;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.episode-info__paragraph {
+  color: #fff;
+  font-size: 24px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.episode-info__card-data {
+  font-weight: 400;
+}

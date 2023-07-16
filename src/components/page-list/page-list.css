@@ -1,0 +1,75 @@
+.page-list__content {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  max-height: calc(100vh - 200px - 60px);
+  overflow-y: scroll;
+}
+
+.page-list__content::-webkit-scrollbar {
+  width: 8px;
+  scrollbar-width: thin;
+}
+.page-list__content::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 2px;
+}
+.page-list__content::-webkit-scrollbar-thumb {
+  background: #1119;
+  border-radius: 2px;
+}
+.page-list__title-sort-wrap {
+  display: flex;
+  width: calc(100% - 12px);
+  background-color: #1115;
+  margin-bottom: 2px;
+}
+
+.page-list__title {
+  font-size: 24px;
+  line-height: 1.5;
+  color: #fff;
+  padding: 8px 12px;
+  text-align: left;
+  flex-basis: 50%;
+}
+
+.page-list__sort-button {
+  color: #fff;
+  font-size: 24px;
+  line-height: 1.5;
+  padding: 8px 12px;
+  border: none;
+  background-color: #1115;
+  flex-basis: 50%;
+  text-align: right;
+  cursor: pointer;
+}
+
+.page-list__list-item {
+  list-style: none;
+  display: block;
+  flex-basis: calc(100% - 4px);
+}
+
+.page-list__link {
+  text-decoration: none;
+}
+
+.page-list__card-name {
+  color: #fff;
+  font-size: 24px;
+  line-height: 1.5;
+  font-weight: 400;
+  padding: 8px 12px;
+  text-align: left;
+  width: 100%;
+  background-color: #1115;
+  color: #fff;
+}
+
+.page-list__card-name:hover {
+  background-color: #1119;
+}

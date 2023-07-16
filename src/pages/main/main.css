@@ -1,0 +1,15 @@
+.main-page {
+  padding-top: 60px;
+}
+
+.main-page__intro {
+  width: 60%;
+  font-size: 36px;
+  padding: 12px;
+  width: 60%;
+  line-height: 2;
+  text-align: center;
+  margin: 0 auto;
+  color: #fff;
+  text-shadow: 1px 1px 4px #cc0;
+}
