@@ -20,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "deploy": "npm run build && scp -r ./build/* kurkov@130.193.57.4:/home/kurkov/zen",
+    "deploy": "npm run build && scp -r ./build/* kurkov@130.193.57.4:/home/kurkov/zenapp",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

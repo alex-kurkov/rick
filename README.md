@@ -1,3 +1,3 @@
 ## React-router Educational App
 
-[сайт здесь](https://kurkov.online/)
+[сайт здесь](https://zen.kurkov.online/)
