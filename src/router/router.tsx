@@ -15,6 +15,7 @@ import { MainPage } from '../pages/main';
 import { CharactersInfoPage } from '../pages/character-info';
 import { EpisodesInfoPage } from '../pages/episode-info';
 import { LocationsInfoPage } from '../pages/location-info';
+import { NotFoundPage } from '../pages/not-found';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -64,7 +65,7 @@ const router = createBrowserRouter(
         }}
         element={<LocationsInfoPage/>}
       />
-      <Route path="*" element={<>not-found</>} />
+      <Route path="*" element={<NotFoundPage/>} />
     </Route>
   )
 );
