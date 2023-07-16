@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useLayoutEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import './page-list.css';
 import { useToggle } from '../../utils/useToggle';
@@ -26,7 +26,7 @@ export const PageList: FC<Props> = ({ list, title }) => {
   ]);
   const [dataList, setDataList] = useState(list);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     toggleSortOrder(searchParams.get('sort'))
   }, [])
 
