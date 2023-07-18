@@ -6,15 +6,15 @@ export function useSearchParamsToggle<T extends string>(
   array: T[],
   searchKey: string,
   initValue: T = array[0]
-): [T, (...args: unknown[]) => void] {
+): [T, (to?: T) => void] {
   const [searchParams, setSearchParams] = useSearchParams({
     [searchKey]: initValue,
   });
   const [index, setIndex] = useState(0);
 
   const toggle = useCallback(
-    (...args: unknown[]) => {
-      if (args.length === 0) {
+    (to?: T) => {
+      if (!to) {
         setIndex((p) => {
           if (p + 1 === array.length) {
             return 0;
@@ -25,10 +25,10 @@ export function useSearchParamsToggle<T extends string>(
         return;
       }
 
-      const nextIndex = array.indexOf(args[0] as never);
+      const nextIndex = array.indexOf(to as never);
       if (nextIndex === -1) {
         console.error(
-          `the value of "${args[0]}" is not present in array: ${array}`
+          `the value of "${to}" is not present in array: ${array}`
         );
       } else {
         setIndex(nextIndex);
@@ -38,7 +38,12 @@ export function useSearchParamsToggle<T extends string>(
   );
 
   useLayoutEffect(() => {
-    toggle(searchParams.get(searchKey));
+    const searchParamValue = searchParams.get(searchKey);
+    if (searchParamValue !== null) {
+      toggle(searchParamValue as T);
+    } else {
+      toggle()
+    }
   }, []);
 
   useEffect(() => {
