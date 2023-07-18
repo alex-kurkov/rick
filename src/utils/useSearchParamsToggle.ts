@@ -41,8 +41,6 @@ export function useSearchParamsToggle<T extends string>(
     const searchParamValue = searchParams.get(searchKey);
     if (searchParamValue !== null) {
       toggle(searchParamValue as T);
-    } else {
-      toggle()
     }
   }, []);
 
