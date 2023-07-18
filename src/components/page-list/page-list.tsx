@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect, useLayoutEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import './page-list.css';
-import { useToggle } from '../../utils/useToggle';
+import { FC, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { sortByNameComparator } from '../../utils/sort-by-name-comparator';
+import { useSearchParamsToggle } from '../../utils/useSearchParamsToggle';
+import './page-list.css';
 
 type NameAndIdObject = {
   name: string;
@@ -18,34 +17,25 @@ type Props = {
 type SortOrder = 'asc' | 'desc' | 'misc';
 
 export const PageList: FC<Props> = ({ list, title }) => {
-  const [searchParams, setSearchParams] = useSearchParams({sort: 'misc'});
-  const [sortOrder, toggleSortOrder] = useToggle<SortOrder>([
+  const [sortOrder, toggleSortOrder] = useSearchParamsToggle<SortOrder>([
     'misc',
     'asc',
     'desc',
-  ]);
+  ], 'sort', 'misc');
   const [dataList, setDataList] = useState(list);
-
-  useLayoutEffect(() => {
-    toggleSortOrder(searchParams.get('sort'))
-  }, [])
-
-  useEffect(() => {
-    setSearchParams({ sort: sortOrder });
-  }, [sortOrder, setSearchParams]);
 
   useEffect(() => {
     let sorted;
     if (sortOrder === 'misc') {
       sorted = [...list];
     } else {
-      sorted = [...dataList].sort((a, b) =>
+      sorted = [...list].sort((a, b) =>
         sortByNameComparator(a, b, sortOrder)
       ) as NameAndIdObject[];
     }
     setDataList(sorted);
 
-  }, [sortOrder]);
+  }, [sortOrder, list]);
 
   return (
     <nav>
