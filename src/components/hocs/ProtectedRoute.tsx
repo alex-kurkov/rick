@@ -1,9 +1,9 @@
 import { useLocation, Navigate } from 'react-router-dom';
 import { RouterPaths } from '../../router-paths';
-import { FC } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 import { useAuth } from '../../context/authProvider';
 
-export const ProtectedRoute: FC<any> = ({ children }) => {
+export const ProtectedRoute: FC<PropsWithChildren> = ({ children }) => {
   const { user } = useAuth();
   const location = useLocation();
 
@@ -17,5 +17,5 @@ export const ProtectedRoute: FC<any> = ({ children }) => {
     );
   }
 
-  return children;
+  return <>{children}</>;
 };
