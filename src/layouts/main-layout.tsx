@@ -13,7 +13,7 @@ const MainLayout = () => {
       <main className="main">
         <Navigation />
         <section className="main__center-section">
-          <Outlet />
+            <Outlet />
         </section>
       </main>
     </>

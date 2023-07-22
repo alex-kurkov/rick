@@ -6,4 +6,5 @@ export enum RouterPaths {
   LOCATIONS_INFO = 'locations/:id',
   EPISODES = 'episodes',
   EPISODES_info = 'episodes/:id',
+  LOGIN = '/login'
 }
