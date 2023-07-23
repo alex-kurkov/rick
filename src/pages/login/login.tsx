@@ -1,7 +1,7 @@
 import React, { FormEventHandler } from 'react';
 import { useAuth } from '../../context/authProvider';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { RouterPaths } from '../../router-paths';
+import { RouterPaths } from '../../router/router-paths';
 import './login.css';
 
 const INPUT_NAME = 'username';

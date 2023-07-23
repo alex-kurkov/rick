@@ -11,7 +11,7 @@ import characters from '../data/characters.json';
 import episodes from '../data/episodes.json';
 import { EpisodesPage } from '../pages/episodes';
 import { CharactersPage } from '../pages/characters';
-import { RouterPaths } from '../router-paths';
+import { RouterPaths } from './router-paths';
 import { MainPage } from '../pages/main';
 import { CharactersInfoPage } from '../pages/character-info';
 import { EpisodesInfoPage } from '../pages/episode-info';

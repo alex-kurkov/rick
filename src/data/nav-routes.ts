@@ -1,4 +1,4 @@
-import { RouterPaths } from "../router-paths";
+import { RouterPaths } from "../router/router-paths";
 
 export interface NavigationRoute {
   to: RouterPaths

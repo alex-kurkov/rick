@@ -2,7 +2,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { NAV_ROUTES } from '../../data/nav-routes';
 import './navigation.css';
 import { useAuth } from '../../context/authProvider';
-import { RouterPaths } from '../../router-paths';
+import { RouterPaths } from '../../router/router-paths';
 
 export const Navigation = () => {
   const { user, logout } = useAuth();

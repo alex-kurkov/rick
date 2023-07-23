@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Navigation } from '../components/navigation';
+import { ErrorBoundary } from '../components/hocs';
 import './main-layout.css';
 
 const MainLayout = () => {
@@ -13,7 +14,9 @@ const MainLayout = () => {
       <main className="main">
         <Navigation />
         <section className="main__center-section">
+          <ErrorBoundary>
             <Outlet />
+          </ErrorBoundary>
         </section>
       </main>
     </>

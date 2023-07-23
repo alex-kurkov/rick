@@ -1,5 +1,5 @@
 import { useLocation, Navigate } from 'react-router-dom';
-import { RouterPaths } from '../../router-paths';
+import { RouterPaths } from '../../router/router-paths';
 import React, { FC, PropsWithChildren } from 'react';
 import { useAuth } from '../../context/authProvider';
 

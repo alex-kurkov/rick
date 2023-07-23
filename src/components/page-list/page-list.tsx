@@ -29,7 +29,7 @@ export const PageList: FC<Props> = ({ list, title }) => {
     if (sortOrder === 'misc') {
       sorted = [...list];
     } else {
-      sorted = [...list].sort((a, b) =>
+      sorted = [...list].sort((a, b) => 
         sortByNameComparator(a, b, sortOrder)
       ) as NameAndIdObject[];
     }
@@ -41,11 +41,11 @@ export const PageList: FC<Props> = ({ list, title }) => {
     <nav>
       <div className="page-list__title-sort-wrap">
         <h2 className="page-list__title">{title}</h2>
-        <button
-          className="page-list__sort-button"
-          onClick={() => toggleSortOrder()}>
-          SORT ORDER: {sortOrder.toUpperCase()}
-        </button>
+          <button
+            className="page-list__sort-button"
+            onClick={() => toggleSortOrder()}>
+            SORT ORDER: {sortOrder.toUpperCase()}
+          </button>
       </div>
       <ul className="page-list__content">
         {dataList.map(({ name, id }) => (
