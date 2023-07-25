@@ -13,6 +13,8 @@ import { useSearchParamsToggle } from '../../utils/useSearchParamsToggle';
 import './PageList.css';
 import { Loader } from '../Loader';
 
+const NTH_LAST_NODE = 1;
+
 type NameAndIdObject = {
   name: string;
   id: number;
@@ -82,7 +84,7 @@ export const PageList: FC<Props> = ({
       </div>
       <ul className="page-list__content">
         {dataList.map(({ name, id }, index) => {
-          if (dataList.length - 1 === index) {
+          if (dataList.length - NTH_LAST_NODE === index) {
             return (
               <li
                 key={id}
