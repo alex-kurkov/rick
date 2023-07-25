@@ -4,68 +4,70 @@ import {
   Outlet,
   Route,
 } from 'react-router-dom';
-import MainLayout from '../layouts/main-layout';
-import { LocationsPage } from '../pages/locations';
-import locations from '../data/location.json';
-import characters from '../data/characters.json';
-import episodes from '../data/episodes.json';
-import { EpisodesPage } from '../pages/episodes';
-import { CharactersPage } from '../pages/characters';
+import MainLayout from '../layouts/MainLayout';
 import { RouterPaths } from './router-paths';
-import { MainPage } from '../pages/main';
-import { CharactersInfoPage } from '../pages/character-info';
-import { EpisodesInfoPage } from '../pages/episode-info';
-import { LocationsInfoPage } from '../pages/location-info';
-import { NotFoundPage } from '../pages/not-found';
-import { LoginPage } from '../pages/login';
+import { NotFoundPage } from '../pages/NotFoundPage';
+import { LoginPage } from '../pages/LoginPage';
 import { ProtectedRoute } from '../components/hocs';
+import { DataProvider } from '../context/dataProvider';
+import { generateLazyComponent } from '../utils/generateLazyComponent';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<MainLayout />}>
-      <Route element={<ProtectedRoute><Outlet/></ProtectedRoute>}>
-        <Route path={RouterPaths.MAIN} element={<MainPage />} />
+      <Route
+        element={
+          <ProtectedRoute>
+            <DataProvider>
+              <Outlet />
+            </DataProvider>
+          </ProtectedRoute>
+        }>
+        <Route
+          path={RouterPaths.MAIN}
+          element={generateLazyComponent('MainPage')}
+        />
         <Route
           path={RouterPaths.CHARACTERS}
-          element={<CharactersPage />}
-          loader={() => {
-            return characters as CharacterData[];
-          }}
+          element={generateLazyComponent('CharactersPage')}
         />
         <Route
           path={RouterPaths.CHARACTERS_INFO}
-          element={<CharactersInfoPage />}
-          loader={() => {
-            return characters as CharacterData[];
+          element={generateLazyComponent('CharactersInfoPage')}
+          lazy={async () => {
+            const loader = await import('./route-loaders').then(
+              (module) => module.characterInfoLoader
+            );
+            return { loader };
           }}
         />
         <Route
           path="episodes"
-          element={<EpisodesPage />}
-          loader={() => {
-            return episodes as EpisodeData[];
-          }}
+          element={generateLazyComponent('EpisodesPage')}
         />
         <Route
           path={RouterPaths.EPISODES_info}
-          element={<EpisodesInfoPage />}
-          loader={() => {
-            return episodes as EpisodeData[];
+          element={generateLazyComponent('EpisodesInfoPage')}
+          lazy={async () => {
+            const loader = await import('./route-loaders').then(
+              (module) => module.episodeInfoLoader
+            );
+            return { loader };
           }}
         />
         <Route
           path={RouterPaths.LOCATIONS}
-          element={<LocationsPage />}
-          loader={() => {
-            return locations as LocationData[];
-          }}
+          element={generateLazyComponent('LocationsPage')}
         />
         <Route
           path={RouterPaths.LOCATIONS_INFO}
-          loader={() => {
-            return locations as LocationData[];
+          element={generateLazyComponent('LocationsInfoPage')}
+          lazy={async () => {
+            const loader = await import('./route-loaders').then(
+              (module) => module.locationInfoLoader
+            );
+            return { loader };
           }}
-          element={<LocationsInfoPage />}
         />
       </Route>
       <Route path={RouterPaths.LOGIN} element={<LoginPage />} />
