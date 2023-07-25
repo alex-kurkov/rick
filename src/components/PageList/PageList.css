@@ -54,6 +54,10 @@
   flex-basis: calc(100% - 4px);
 }
 
+.page-list__list-item_type_loader {
+  text-align: center;
+}
+
 .page-list__link {
   text-decoration: none;
 }

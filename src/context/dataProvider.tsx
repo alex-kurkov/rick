@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {
+  Dispatch,
+  SetStateAction,
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useState,
@@ -16,9 +17,10 @@ interface DataInterface {
 }
 
 interface DataContextInterface extends DataInterface {
-  loadCharacters: () => void;
-  loadLocations: () => void;
-  loadEpisodes: () => void;
+  setCharacterPage: Dispatch<SetStateAction<number | null>>;
+  setLocationPage: Dispatch<SetStateAction<number | null>>;
+  setEpisodePage: Dispatch<SetStateAction<number | null>>;
+  loading: boolean;
 }
 
 const initData = {
@@ -29,9 +31,10 @@ const initData = {
 
 const DataContext = createContext<DataContextInterface>({
   ...initData,
-  loadCharacters: () => {},
-  loadLocations: () => {},
-  loadEpisodes: () => {},
+  setCharacterPage: () => {},
+  setLocationPage: () => {},
+  setEpisodePage: () => {},
+  loading: false,
 });
 
 export const DataProvider = ({ children }: { children: React.ReactNode }) => {
@@ -39,6 +42,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [characterPage, setCharacterPage] = useState<number | null>(1);
   const [episodePage, setEpisodePage] = useState<number | null>(1);
   const [locationPage, setLocationPage] = useState<number | null>(1);
+  const [loading, setLoading] = useState(false);
 
   const setNewData = (
     key: keyof DataInterface,
@@ -48,58 +52,63 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       ...state,
       [key]: getUniqueIdArr([...state[key], ...data]),
     }));
+    setLoading(false);
   };
 
-  const loadCharacters = useCallback(() => {
+  const loadCharacters = () => {
     if (!characterPage) return;
+    setLoading(true);
     listsApi.getCharacters(characterPage).then((resData) => {
       if (!resData) return;
       setNewData('characters', resData.results);
-
-      const nextPage =
-        resData.info.pages > characterPage ? characterPage + 1 : null;
-
-      setCharacterPage(nextPage);
+      if (resData.info.pages === characterPage) {
+        setCharacterPage(null);
+      }
     });
-  }, []);
+  };
 
-  const loadEpisodes = useCallback(() => {
+  const loadEpisodes = () => {
     if (!episodePage) return;
-
+    setLoading(true);
     listsApi.getEpisodes(episodePage).then((resData) => {
       if (!resData) return;
       setNewData('episodes', resData.results);
-
-      const nextPage =
-        resData.info.pages > episodePage ? episodePage + 1 : null;
-
-      setEpisodePage(nextPage);
+      if (resData.info.pages === episodePage) {
+        setEpisodePage(null);
+      }
     });
-  }, []);
+  };
 
-  const loadLocations = useCallback(() => {
+  const loadLocations = () => {
     if (!locationPage) return;
-
+    setLoading(true);
     listsApi.getLocations(locationPage).then((resData) => {
       if (!resData) return;
       setNewData('locations', resData.results);
-
-      const nextPage =
-        resData.info.pages > locationPage ? locationPage + 1 : null;
-
-      setLocationPage(nextPage);
+      if (resData.info.pages === locationPage) {
+        setLocationPage(null);
+      }
     });
-  }, []);
+  };
 
   useEffect(() => {
+    if (characterPage === null) return;
     loadCharacters();
-    loadEpisodes();
+  }, [characterPage]);
+  
+  useEffect(() => {
+    if (episodePage === null) return;
     loadLocations();
-  }, []);
+  }, [locationPage]);
+  
+  useEffect(() => {
+    if (episodePage === null) return;
+    loadEpisodes();
+  }, [episodePage]);
 
   return (
     <DataContext.Provider
-      value={{ ...data, loadCharacters, loadEpisodes, loadLocations }}>
+      value={{ ...data, setCharacterPage, setEpisodePage, setLocationPage, loading }}>
       {children}
     </DataContext.Provider>
   );

@@ -1,8 +1,8 @@
 import { useLoaderData, Await } from 'react-router-dom';
 import { BackLink } from '../../components/BackLink';
 import { Suspense } from 'react';
-import './EpisodesInfoPage.css';
 import { Loader } from '../../components/Loader';
+import './EpisodesInfoPage.css';
 
 export const EpisodesInfoPage = () => {
   const data = useLoaderData() as { episode: EpisodeData };
