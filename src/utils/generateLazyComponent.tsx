@@ -13,4 +13,4 @@ export const generateLazyComponent = (pageName: string) => {
       <Component />
     </Suspense>
   );
-}; 
+};
