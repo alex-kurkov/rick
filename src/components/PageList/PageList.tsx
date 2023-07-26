@@ -73,7 +73,7 @@ export const PageList: FC<Props> = ({
   }, [sortOrder, list]);
 
   return (
-    <nav>
+    <nav className='page-list'>
       <div className="page-list__title-sort-wrap">
         <h2 className="page-list__title">{title}</h2>
         <button

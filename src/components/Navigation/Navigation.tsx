@@ -29,7 +29,7 @@ export const Navigation = () => {
         ))}
         {user && (
           <button onClick={handleLogout} className="navigation__logout">
-            LOG OUT
+            LOGOUT
           </button>
         )}
       </nav>

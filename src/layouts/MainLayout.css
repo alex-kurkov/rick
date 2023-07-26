@@ -35,3 +35,24 @@
   padding: 4px;
   height: calc(100vh - 200px);
 }
+
+@media (max-width: 767px) {
+  .header {
+    gap: 4px;
+  }
+
+  .header__title {
+    width: 96%;
+    font-size: 24px;
+  }
+
+  .main {
+    flex-direction: column;
+    position: relative;
+    height: calc(100vh - 260px);
+  }
+
+  .main__center-section {
+    height: calc(100vh - 260px);
+  }
+}

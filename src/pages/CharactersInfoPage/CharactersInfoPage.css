@@ -22,15 +22,16 @@
 }
 .character-info__image-wrap {
   width: 300px;
-  height: 300px;
+  height: auto;
   flex-basis: 300px;
   overflow: hidden;
   position: relative;
+  padding-bottom: 300px;
 }
 
 .character-info__image-loader {
   position: absolute;
-  top:0;
+  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -42,6 +43,11 @@
 }
 
 .character-info__image {
+    position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   width: 300px;
   height: 300px;
   object-fit: cover;
@@ -56,4 +62,24 @@
 
 .character-info__card-data {
   font-weight: 400;
+}
+
+@media (max-width: 767px) {
+  .character-info__card {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .character-info__image-wrap {
+    width: 100%;
+    padding-bottom: 100%;
+    flex-basis: 100%;
+  }
+  .character-info__image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .character-info__paragraph {
+    font-size: 16px;
+  }
 }

@@ -12,5 +12,11 @@
 }
 .back-link:hover {
   background-color: #1119;
+}
 
+@media (max-width: 767px) {
+  .back-link {
+    font-size: 16px;
+    padding: 12px;
+  }
 }
