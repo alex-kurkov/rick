@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Rick&Morty app by Alex Kurkov" />
+
+    <title>Rick and Morty app</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', async () => {
+          try {
+            const registration = await navigator.serviceWorker.register(
+              '/sw.js'
+            );
+            console.log('Service worker register success', registration.scope);
+          } catch (e) {
+            console.log('Service worker register fail', e);
+          }
+        });
+      } else {
+        console.log('service worker is not supported');
+      }
+    </script>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>

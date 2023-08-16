@@ -1,71 +1,77 @@
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  Outlet,
   Route,
 } from 'react-router-dom';
-import MainLayout from '../layouts/main-layout';
-import {LocationsPage} from '../pages/locations';
-import locations from '../data/location.json';
-import characters from '../data/characters.json';
-import episodes from '../data/episodes.json';
-import {EpisodesPage} from '../pages/episodes';
-import { CharactersPage } from '../pages/characters';
-import { RouterPaths } from '../router-paths';
-import { MainPage } from '../pages/main';
-import { CharactersInfoPage } from '../pages/character-info';
-import { EpisodesInfoPage } from '../pages/episode-info';
-import { LocationsInfoPage } from '../pages/location-info';
-import { NotFoundPage } from '../pages/not-found';
+import MainLayout from '../layouts/MainLayout';
+import { RouterPaths } from './router-paths';
+import { NotFoundPage } from '../pages/NotFoundPage';
+import { LoginPage } from '../pages/LoginPage';
+import { ProtectedRoute } from '../components/hocs';
+import { DataProvider } from '../context/dataProvider';
+import { generateLazyComponent } from '../utils/generateLazyComponent';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<MainLayout />}>
-      <Route path={RouterPaths.MAIN} element={<MainPage />}>
-        main
-      </Route>
       <Route
-        path={RouterPaths.CHARACTERS}
-        element={<CharactersPage />}
-        loader={() => {
-          return characters as CharacterData[];
-        }}
-      />
-      <Route
-        path={RouterPaths.CHARACTERS_INFO}
-        element={<CharactersInfoPage />}
-        loader={() => {
-          return characters as CharacterData[];
-        }}
-      />
-      <Route
-        path="episodes"
-        element={<EpisodesPage />}
-        loader={() => {
-          return episodes as EpisodeData[];
-        }}
-      />
-      <Route
-        path={RouterPaths.EPISODES_info}
-        element={<EpisodesInfoPage />}
-        loader={() => {
-          return episodes as EpisodeData[];
-        }}
-      />
-      <Route
-        path={RouterPaths.LOCATIONS}
-        element={<LocationsPage />}
-        loader={() => {
-          return locations as LocationData[];
-        }}
+        element={
+          <ProtectedRoute>
+            <DataProvider>
+              <Outlet />
+            </DataProvider>
+          </ProtectedRoute>
+        }>
+        <Route
+          path={RouterPaths.MAIN}
+          element={generateLazyComponent('MainPage')}
         />
-      <Route
-        path={RouterPaths.LOCATIONS_INFO}
-        loader={() => {
-          return locations as LocationData[];
-        }}
-        element={<LocationsInfoPage/>}
-      />
-      <Route path="*" element={<NotFoundPage/>} />
+        <Route
+          path={RouterPaths.CHARACTERS}
+          element={generateLazyComponent('CharactersPage')}
+        />
+        <Route
+          path={RouterPaths.CHARACTERS_INFO}
+          element={generateLazyComponent('CharactersInfoPage')}
+          lazy={async () => {
+            const loader = await import('./route-loaders').then(
+              (module) => module.characterInfoLoader
+            );
+            return { loader };
+          }}
+        />
+        <Route
+          path="episodes"
+          element={generateLazyComponent('EpisodesPage')}
+        />
+        <Route
+          path={RouterPaths.EPISODES_info}
+          element={generateLazyComponent('EpisodesInfoPage')}
+          lazy={async () => {
+            const loader = await import('./route-loaders').then(
+              (module) => module.episodeInfoLoader
+            );
+            return { loader };
+          }}
+        />
+        <Route
+          path={RouterPaths.LOCATIONS}
+          element={generateLazyComponent('LocationsPage')}
+        />
+        <Route
+          path={RouterPaths.LOCATIONS_INFO}
+          element={generateLazyComponent('LocationsInfoPage')}
+          lazy={async () => {
+            const loader = await import('./route-loaders').then(
+              (module) => module.locationInfoLoader
+            );
+            return { loader };
+          }}
+        />
+      </Route>
+      <Route path={RouterPaths.LOGIN} element={<LoginPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
 );
