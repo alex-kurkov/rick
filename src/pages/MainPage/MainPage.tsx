@@ -1,12 +1,11 @@
-import './MainPage.css';
+import { Box, Text } from '@mantine/core';
+
 export const MainPage = () => {
   return (
-    <>
-      <div className='main-page'>
-        <p className="main-page__intro">
+    <Box pt={60}>
+        <Text size={32} w="80%" mx="auto" ta="center">
           Hey there! Choose menu-entry on the left to begin...
-        </p>
-      </div>
-    </>
+        </Text>
+    </Box>
   );
 };
