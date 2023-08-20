@@ -10,8 +10,14 @@ import {
 import { Link } from 'react-router-dom';
 import { sortByNameComparator } from '../../utils/sortByNameComparator';
 import { useSearchParamsToggle } from '../../utils/useSearchParamsToggle';
-import './PageList.css';
-import { Loader } from '../Loader';
+import {
+  Loader,
+  createStyles,
+  Flex,
+  Title,
+  Button,
+  ScrollArea,
+} from '@mantine/core';
 
 const NTH_LAST_NODE = 1;
 
@@ -29,6 +35,24 @@ type Props = {
 
 type SortOrder = 'asc' | 'desc' | 'misc';
 
+const useStyles = createStyles((_) => ({
+  link: {
+    minHeight: '40px',
+    scrollSnapAlign: 'start',
+    height: '40px',
+    textDecoration: 'none',
+    lineHeight: '40px',
+    padding: '0 8px',
+    flexBasis: 'calc(100% - 4px)',
+    backgroundColor: '#1113',
+    color: '#fff',
+
+    '&:hover': {
+      backgroundColor: '#1118',
+    },
+  },
+}));
+
 export const PageList: FC<Props> = ({
   list,
   title,
@@ -42,12 +66,15 @@ export const PageList: FC<Props> = ({
   );
   const [dataList, setDataList] = useState(list);
 
-  const observer = useRef<IntersectionObserver>();
+  const observer = useRef<IntersectionObserver>(null);
+
+  const { classes } = useStyles();
 
   const nodeInTheEndRef = useCallback(
-    (node: HTMLLIElement) => {
+    (node: HTMLAnchorElement) => {
       if (observer.current) observer.current.disconnect();
 
+      //@ts-ignore
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           setPage((p) => (p ? p + 1 : null));
@@ -73,44 +100,61 @@ export const PageList: FC<Props> = ({
   }, [sortOrder, list]);
 
   return (
-    <nav className='page-list'>
-      <div className="page-list__title-sort-wrap">
-        <h2 className="page-list__title">{title}</h2>
-        <button
-          className="page-list__sort-button"
-          onClick={() => toggleSortOrder()}>
-          SORT ORDER: {sortOrder.toUpperCase()}
-        </button>
-      </div>
-      <ul className="page-list__content">
-        {dataList.map(({ name, id }, index) => {
-          if (dataList.length - NTH_LAST_NODE === index) {
-            return (
-              <li
-                key={id}
-                ref={nodeInTheEndRef}
-                className="page-list__list-item">
-                <Link className="page-list__link" to={String(id)}>
-                  <h3 className="page-list__card-name">{name}</h3>
-                </Link>
-              </li>
-            );
-          } else {
-            return (
-              <li key={id} className="page-list__list-item">
-                <Link className="page-list__link" to={String(id)}>
-                  <h3 className="page-list__card-name">{name}</h3>
-                </Link>
-              </li>
-            );
-          }
-        })}
-        {loading && (
-          <li className="page-list__list-item page-list__list-item_type_loader">
-            <Loader location="inline" />
-          </li>
-        )}
-      </ul>
+    <nav>
+      <Flex direction="column" gap="2" mah="calc(100vh - 200px)">
+        <Flex mb={2} h={40} mah={40} w="calc(100%-12px)" bg="#1115">
+          <Title
+            order={2}
+            ta="left"
+            c="white"
+            py={8}
+            px={12}
+            size="sm"
+            fw="bold"
+            sx={() => ({
+              flexBasis: '50%',
+            })}>
+            {title}
+          </Title>
+
+          <Button
+            h={40}
+            radius={0}
+            c="white"
+            uppercase
+            variant="filled"
+            w="50%"
+            ta="right"
+            onClick={() => toggleSortOrder()}>
+            SORT ORDER: {sortOrder}
+          </Button>
+        </Flex>
+
+        <ScrollArea h="calc(100vh - 200px - 60px)" type="hover" scrollbarSize={8}>
+          <Flex gap={2} direction="column">
+            {dataList.map(({ name, id }, index) => {
+              if (dataList.length - NTH_LAST_NODE === index) {
+                return (
+                  <Link
+                    ref={nodeInTheEndRef}
+                    key={id}
+                    className={classes.link}
+                    to={String(id)}>
+                    {name}
+                  </Link>
+                );
+              } else {
+                return (
+                  <Link key={id} className={classes.link} to={String(id)}>
+                    {name}
+                  </Link>
+                );
+              }
+            })}
+            {loading && <Loader size="md" color="white" />}
+          </Flex>
+        </ScrollArea>
+      </Flex>
     </nav>
   );
 };

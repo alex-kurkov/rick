@@ -1,13 +1,28 @@
-import React, { FormEventHandler } from 'react';
+import { FormEventHandler } from 'react';
 import { useAuth } from '../../context/authProvider';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { RouterPaths } from '../../router/router-paths';
-import './LoginPage.css';
+import { Title, TextInput, Flex, Button, createStyles } from '@mantine/core';
 
 const INPUT_NAME = 'username';
 
+const useStyles = createStyles(() => ({
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '24px',
+    alignItems: 'center',
+    width: 'clamp(200px, 50%, 640px)',
+
+    '& label': {
+      color: '#fff',
+    },
+  },
+}));
+
 export const LoginPage = () => {
   const { login } = useAuth();
+  const { classes } = useStyles();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -21,23 +36,26 @@ export const LoginPage = () => {
     if (!userName || userName.length === 0) return;
 
     login(userName, () => {
-      const toPathname = location.state?.from + location.state.search || RouterPaths.MAIN;
+      const toPathname =
+        location.state?.from + location.state.search || RouterPaths.MAIN;
       navigate(toPathname, { replace: true });
     });
   };
 
   return (
-    <div className="login">
-      <h2 className="login__title">LOGIN PAGE</h2>
-      <form className="login__form" onSubmit={handleSubmit}>
-        <label className="login__label">
-          ENTER NON-EMPTY PHRAZE TO LOGIN
-          <input className="login__input" type="text" name={INPUT_NAME} />
-        </label>
-        <button className="login__button" type="submit">
+    <Flex gap={24} direction="column" align="center">
+      <Title order={2}>LOGIN PAGE</Title>
+      <form onSubmit={handleSubmit} className={classes.form}>
+        <TextInput
+          w="100%"
+          name={INPUT_NAME}
+          placeholder="begin to type smth..."
+          label="ENTER NON-EMPTY PHRAZE TO LOGIN"
+        />
+        <Button w="100%" variant="filled" type="submit">
           LOG IN
-        </button>
+        </Button>
       </form>
-    </div>
+    </Flex>
   );
 };

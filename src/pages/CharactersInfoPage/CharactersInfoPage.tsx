@@ -1,8 +1,7 @@
 import { useLoaderData, Await } from 'react-router-dom';
 import { BackLink } from '../../components/BackLink';
 import { Suspense, useState } from 'react';
-import { Loader } from '../../components/Loader';
-import './CharactersInfoPage.css';
+import { Loader, Box, Title, Text, Flex, Image, Center } from '@mantine/core';
 
 export const CharactersInfoPage = () => {
   const data = useLoaderData() as { character: CharacterData };
@@ -11,65 +10,74 @@ export const CharactersInfoPage = () => {
   return (
     <>
       <BackLink title="GO BACK TO CHARACTERS LIST" />
-      <div className="character-info">
-        <div className="character-info__card">
-          <Suspense fallback={<Loader location="inline" />}>
+      <Box bg="#1115" p={12}>
+        <Flex gap={8}>
+          <Suspense
+            fallback={
+              <Center h="auto" w="100%">
+                <Loader color="white" />
+              </Center>
+            }>
             <Await resolve={data.character} errorElement={'NO DATA FOUND!'}>
               {(character) => {
                 const created = new Date(Date.parse(character.created));
                 return (
                   <>
-                    <div className="character-info__image-wrap">
-                      <div className="character-info__image-loader">
-                        {!loaded && <Loader location="inline" />}
-                      </div>
-                      <img
+                    <Box w={300} h="auto" pb={300} pos="relative">
+                      <Center h={300} w={300} pos="absolute" top={0} left={0}>
+                        {!loaded && <Loader color="white" />}
+                      </Center>
+                      <Image
+                        pos="absolute"
+                        top={0}
+                        left={0}
+                        maw={300}
+                        radius={0}
                         onLoad={() => setLoaded(true)}
                         src={character.image}
                         alt={`avatar of ${character.name}`}
-                        className="character-info__image"
                       />
-                    </div>
-                    <div className="character-info__data-wrap">
-                      <h2 className="character-info__name">{character.name}</h2>
-                      <p className="character-info__paragraph">
+                    </Box>
+                    <Flex direction="column" gap={4}>
+                      <Title order={3}>{character.name}</Title>
+                      <Text>
                         Status:{' '}
-                        <span className="character-info__card-data">
+                        <Text span fw="bolder">
                           {character.status || 'Unknown'}
-                        </span>
-                      </p>
-                      <p className="character-info__paragraph">
+                        </Text>
+                      </Text>
+                      <Text>
                         Species:{' '}
-                        <span className="character-info__card-data">
+                        <Text span fw="bolder">
                           {character.species || 'Unknown'}
-                        </span>
-                      </p>
-                      <p className="character-info__paragraph">
+                        </Text>
+                      </Text>
+                      <Text>
                         Type:{' '}
-                        <span className="character-info__card-data">
+                        <Text span fw="bolder">
                           {character.type || 'N/a'}
-                        </span>
-                      </p>
-                      <p className="character-info__paragraph">
+                        </Text>
+                      </Text>
+                      <Text>
                         Gender:{' '}
-                        <span className="character-info__card-data">
+                        <Text span fw="bolder">
                           {character.gender || 'Undefined'}
-                        </span>
-                      </p>
-                      <p className="character-info__paragraph">
+                        </Text>
+                      </Text>
+                      <Text>
                         Created:{' '}
-                        <span className="character-info__card-data">
+                        <Text span fw="bolder">
                           {created.toLocaleDateString()}
-                        </span>
-                      </p>
-                    </div>
+                        </Text>
+                      </Text>
+                    </Flex>
                   </>
                 );
               }}
             </Await>
           </Suspense>
-        </div>
-      </div>
+        </Flex>
+      </Box>
     </>
   );
 };

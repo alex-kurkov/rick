@@ -1,47 +1,46 @@
 import { useLoaderData, Await } from 'react-router-dom';
 import { BackLink } from '../../components/BackLink';
 import { Suspense } from 'react';
-import { Loader } from '../../components/Loader';
-import './EpisodesInfoPage.css';
+import { Loader, Box, Title, Text } from '@mantine/core';
 
 export const EpisodesInfoPage = () => {
   const data = useLoaderData() as { episode: EpisodeData };
   return (
     <>
       <BackLink title="GO BACK TO EPISODES LIST" />
-      <div className="episode-info">
-        <Suspense fallback={<Loader location='inline'/>}>
+      <Box bg="#1115" p={12}>
+        <Suspense fallback={<Loader color="white" />}>
           <Await resolve={data.episode} errorElement={'NOTHING FOUND HERE!'}>
             {(episode) => {
               const created = new Date(Date.parse(episode.created));
               return (
                 <>
-                  <h2 className="episode-info__name">{episode.name}</h2>
-                  <p className="episode-info__paragraph">
+                  <Title order={3}>{episode.name}</Title>
+                  <Text>
                     Episode Index:{' '}
-                    <span className="episode-info__card-data">
+                    <Text fw="bolder" span>
                       {episode.episode || 'Unknown'}
-                    </span>
-                  </p>
+                    </Text>
+                  </Text>
 
-                  <p className="episode-info__paragraph">
+                  <Text>
                     Air Date:{' '}
-                    <span className="episode-info__card-data">
+                    <Text fw="bolder" span>
                       {episode.air_date}
-                    </span>
-                  </p>
-                  <p className="episode-info__paragraph">
+                    </Text>
+                  </Text>
+                  <Text>
                     Created:{' '}
-                    <span className="episode-info__card-data">
+                    <Text span fw="bolder">
                       {created.toLocaleDateString()}
-                    </span>
-                  </p>
+                    </Text>
+                  </Text>
                 </>
               );
             }}
           </Await>
         </Suspense>
-      </div>
+      </Box>
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react"
-import { Loader } from "../components/Loader"
+import { Loader, Center } from "@mantine/core"
 
 export const generateLazyComponent = (pageName: string) => {
   const Component = lazy(() =>
@@ -9,7 +9,12 @@ export const generateLazyComponent = (pageName: string) => {
   );
 
   return (
-    <Suspense fallback={<Loader location="overlay" />}>
+    <Suspense
+      fallback={
+        <Center mx="auto">
+          <Loader color="white" size="lg" />
+        </Center>
+      }>
       <Component />
     </Suspense>
   );
