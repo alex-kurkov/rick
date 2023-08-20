@@ -1,78 +1,60 @@
 /* eslint-disable no-restricted-globals */
-const CACHE_NAME = 'rick-app-v1';
+const CACHE_NAME = 'rick-app-cache-v1';
+const CACHE_NAME_DYNAMIC = 'rick-app-cache-dynamic';
 
 const URLS = [
   '/',
   '/index.html',
-  '/assets/bg.jpg',
-  '/assets/get-schwifty.ttf',
+  '/src/assets/bg.jpg',
+  '/src/assets/get-schwifty.ttf',
 ];
 
-self.addEventListener("install", event => {
-  console.log('install sw')
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log("Opened cache");
-        return cache.addAll(URLS);
-      })
-      .catch(err => {
-        console.log(err);
-        throw err;
-      })
-  );
+self.addEventListener("install", async (_) => {
+  const cache = await caches.open(CACHE_NAME);
+  await cache.addAll(URLS);
 });
 
-self.addEventListener('activate', event => {
-  console.log("activate sw");
-
-  const removeCacheKey = async () => {
-    const cacheNames = await caches.keys();
-    return Promise.all(
-      cacheNames
-        .filter(name => name !== CACHE_NAME)
-        .map(name => caches.delete(name))
-    )
-  };
-
-  console.log('Activated');
-  event.waitUntil(removeCacheKey());
+self.addEventListener('activate', async (_) => {
+  const cacheNames = await caches.keys();
+  await Promise.all(
+    cacheNames
+      .filter(name => name !== CACHE_NAME && name !== CACHE_NAME_DYNAMIC)
+      .map(name => caches.delete(name))
+  )
 });
 
 self.addEventListener('fetch', event => {
-  console.log("fetching with sw");
-
-  event.respondWith(
-    tryNetwork(event.request, 400)
-      .catch(() => getFromCache(event.request))
-  );
+  event.respondWith(cacheFirst(event.request));
 });
 
-function tryNetwork(request, timeout) {
-  return new Promise((resolve, reject) => {
-    const timeoutId = setTimeout(reject, timeout);
-    const allowedMethods = ['GET', 'HEAD'];
 
-    fetch(request).then(response => {
-      clearTimeout(timeoutId);
-      const responseClone = response.clone();
+async function cacheFirst(request) {
+  const cached = await caches.match(request);
 
-      caches.open(CACHE_NAME).then(cache => {
-        if (request.url.match('^(http|https)://') && allowedMethods.includes(request.method)) {
-          cache.put(request, responseClone);
-        }
-      })
 
-      resolve(response);
-    }, reject);
-  });
-};
 
-async function getFromCache(request) {
-  console.log('Интернета нет либо запрос не прошел, данные взяты из кэша')
+  
+  try { 
+    return cached ?? await fetch(request).then(response => {
+      return networkFirst(request);
+    });
 
-  const cache = await caches.open(CACHE_NAME);
-  const result = await cache.match(request);
+  } catch (error) {
+    console.log('no data in cache: ', error)
+    return networkFirst(request);
+  }
+}
 
-  return result || Promise.reject('no-match');
-};
+async function networkFirst(request) {
+  const cache = await caches.open(CACHE_NAME_DYNAMIC);
+  try {
+    const response = await fetch(request);
+    await cache.put(request, response.clone());
+    return response;
+  } catch (error) {
+    console.error('network request failed, trying to get data from cache');
+    const cached = await cache.match(request);
+    return cached ?? '404 not found';
+  }
+
+}
